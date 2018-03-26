@@ -40,8 +40,8 @@ int MicA4Val1 = 0;
 int MicA4Val2 = 0;
 
 int MicA5 = A5;
-int MicA5Val1=0;
-int MicA5Val2=0;
+int MicA5Val1 = 0;
+int MicA5Val2 = 0;
 
 // declearing a sevo and sensor from their classes
 Servo Servo1;
@@ -117,13 +117,18 @@ void Ready() {
   if (MicA5Val2 - MicA5Val1 > 20 && HitMicA5 == false) {
     TakeTimeMic(MicA5);
   }
-  while (HitMicA0 == true && HitMicA4 == true && HitMicA5==true) {
-    Compare();
-    HitMicA0 = false;
-    HitMicA4 = false;
-    HitMicA5 = false;
-    delay(1000);
-    break;
+  if (HitMicA0 == true && HitMicA4 == true && HitMicA5 == true) {
+    //If the time differences in the mic recordings is less than X microseconds compare else mark microphones as non hit
+    if(abs(TimeMicA0-TimeMicA4)<1000000&&abs(TimeMicA4-TimeMicA5)<1000000){
+      Compare();
+      delay(1000);
+      //break;
+    }
+    else{
+      HitMicA0 = false;
+      HitMicA4 = false;
+      HitMicA5 = false;
+    }
   }
 }
 
@@ -146,9 +151,13 @@ void Compare() {
   }
 
   Servo1.write(90);
-  TimeMicA0=0;
-  TimeMicA4=0;
-  TimeMicA5=0;
+  TimeMicA0 = 0;
+  TimeMicA4 = 0;
+  TimeMicA5 = 0;
+
+  HitMicA0 = false;
+  HitMicA4 = false;
+  HitMicA5 = false;
 
 }
 
